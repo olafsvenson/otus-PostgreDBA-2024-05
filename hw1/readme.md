@@ -84,7 +84,6 @@ commit;
 ``` sql     
 \set AUTOCOMMIT off
 set transaction isolation level repeatable read;
-begin;
 ```
    **первая сессия**
 ![](files/11_1.png)
