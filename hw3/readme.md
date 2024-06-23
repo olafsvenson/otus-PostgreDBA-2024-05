@@ -5,6 +5,8 @@
 ``` text
 sudo -u postgres pg_lsclusters
 ```
+![](files/3.png)
+
 4) зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым
 ``` text
 create table test(c1 text);
