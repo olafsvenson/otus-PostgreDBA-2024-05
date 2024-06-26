@@ -235,3 +235,4 @@ insert into t2 values (6);
 
 ![](files/41_5.png) 
 
+но доступ на insert остался
