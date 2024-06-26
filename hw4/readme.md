@@ -71,7 +71,9 @@ grant readonly to testread;
 18) у вас есть идеи почему? ведь права то дали?
 19) посмотрите на список таблиц
 20) подсказка в шпаргалке под пунктом 20
+
 ![](files/16-21_2.png)
+
 21) а почему так получилось с таблицей (если делали сами и без шпаргалки то может у вас все нормально)
     при создании таблицы явно не указывали схему, где создаем таблицу. (а в тексте задания не указано, что нужно создавать таблицу в этой схеме)
 
@@ -124,40 +126,112 @@ select * from testnm.t1;
 таблица пересоздавалась, нужно заново дать права на SELECT
 
 30) как сделать так чтобы такое больше не повторялось? если нет идей - смотрите шпаргалку
-	выдать права селект
-	grant SELECT on t1.testnm TO readonly;
+выдать права селект
 
+``` text
+\c testdb postgres 
+grant SELECT on testnm.t1 TO readonly;
+```
 31) сделайте select * from testnm.t1;
-32) получилось?
+    
+![](files/28-36.png)
+
+
+33) получилось?
    ДА
 
-![](files/26-32.png)
+34) есть идеи почему? если нет - смотрите шпаргалку
 
-33) есть идеи почему? если нет - смотрите шпаргалку
-34) сделайте select * from testnm.t1;
-35) получилось?
-36) ура!
+выдали точечно права на таблицу
 
-37) теперь попробуйте выполнить команду
+35) сделайте select * from testnm.t1;
+
+![](files/37.png)
+
+36) получилось?
+
+ДА
+
+37) ура!
+	
+38) теперь попробуйте выполнить команду
 
 ``` text 
 create table t2(c1 integer); insert into t2 values (2);
 ```
 
-![](files/37.png)
+
 
 38) а как так? нам же никто прав на создание таблиц и insert в них под ролью readonly?
-	видимо это стандартные пермишены
+видимо это стандартные пермишены
 
 39) есть идеи как убрать эти права? если нет - смотрите шпаргалку
-	можно принудительно забрать права на создание и на вставку.
+можно принудительно забрать права на создание и на вставку.
 
-  Делаем REVOKE, но права остались.
+Делаем REVOKE, но права остались.
   
-  ![](files/39.png)
+![](files/39.png)
 
-  Переподключаемся к базе под пользователем postgres и под ним выполняем REVOKE
+Переподключаемся к базе под пользователем postgres и под ним выполняем REVOKE
 
-  ![](files/39_1.png)
+![](files/39_1.png)
 
-  все равно есть права
+все равно есть права
+
+Тогда гуглим и узнаем из документации (https://www.postgresql.org/docs/9.4/ddl-schemas.html#DDL-SCHEMAS-PRIV ) что нужно выполнить
+
+``` text 
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+```
+
+![](files/40.png) 
+
+Теперь прав на создание нет.
+Осталось разобраться как запретить INSERT
+
+``` text 
+\c testdb postgres 
+revoke insert on database testdb from testread;
+\c testdb testread
+ insert into t2 values (3);
+```
+но так нельзя
+
+![](files/41_2.png) 
+
+хорошо, теперь попробуем запретить для public, по аналогии с запретом CREATE
+
+``` text 
+\c testdb postgres 
+revoke insert on database testdb from public;
+\c testdb testread
+ insert into t2 values (4);
+```
+
+![](files/41_3.png) 
+
+но таких привелегий нет
+
+тут стало совсем не понятно, поэтому воспользовался шпаргалкой
+
+``` text
+\c testdb postgres 
+REVOKE ALL on DATABASE testdb FROM public; 
+\c testdb testread
+insert into t2 values (6);
+```
+но права остались
+
+![](files/41_4.png) 
+
+может что-то упустил, еще раз выполняю
+ ``` text
+\c testdb postgres
+REVOKE CREATE ON SCHEMA public FROM PUBLIC; 
+REVOKE ALL on DATABASE testdb FROM public; 
+\c testdb testread
+insert into t2 values (6);
+```
+
+![](files/41_5.png) 
+
