@@ -169,12 +169,14 @@ create table t2(c1 integer); insert into t2 values (2);
 
 можно принудительно забрать права на создание и на вставку.
 
-Делаем REVOKE, но права остались.
-  
-![](files/39.png)
-
 Переподключаемся к базе под пользователем postgres и под ним выполняем REVOKE
 
+``` text
+\c testdb postgres
+revoke insert on schema public from testread; 
+\c testdb testread
+create table t5(c1 integer);
+```
 ![](files/39_1.png)
 
 все равно есть права
