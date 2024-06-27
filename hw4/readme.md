@@ -183,8 +183,11 @@ create table t5(c1 integer);
 
 Тогда гуглим и узнаем из документации (https://www.postgresql.org/docs/9.4/ddl-schemas.html#DDL-SCHEMAS-PRIV ) что нужно выполнить
 
-``` text 
+``` text
+\c testdb postgres
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+\c testdb testread
+create table t6(c1 integer);
 ```
 
 ![](files/40.png) 
