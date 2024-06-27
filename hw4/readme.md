@@ -147,9 +147,6 @@ grant SELECT on testnm.t1 TO readonly;
 выдали точечно права на таблицу
 
 34) сделайте select * from testnm.t1;
-
-![](files/37.png)
-
 35) получилось?
 
 ДА
@@ -162,7 +159,7 @@ grant SELECT on testnm.t1 TO readonly;
 create table t2(c1 integer); insert into t2 values (2);
 ```
 
-
+![](files/37.png)
 
 38) а как так? нам же никто прав на создание таблиц и insert в них под ролью readonly?
 
