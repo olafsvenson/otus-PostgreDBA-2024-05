@@ -201,7 +201,7 @@ revoke insert on database testdb from testread;
 ```
 но так нельзя
 
-![](files/41_2.png) 
+![](files/41_2_new.png) 
 
 хорошо, теперь попробуем запретить для public, по аналогии с запретом CREATE
 
