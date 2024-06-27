@@ -173,7 +173,7 @@ create table t2(c1 integer); insert into t2 values (2);
 
 ``` text
 \c testdb postgres
-revoke insert on schema public from testread; 
+revoke create on schema public from testread; 
 \c testdb testread
 create table t5(c1 integer);
 ```
