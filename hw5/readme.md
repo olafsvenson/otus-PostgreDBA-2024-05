@@ -85,7 +85,7 @@ INSERT INTO otus_test(txt) SELECT 'sample txt' FROM generate_series(1,1000000);
 SELECT pg_size_pretty(pg_total_relation_size('otus_test'));
 ```
 
-![](files/9.png)
+![](files/9_1.png)
 
 10) 5 раз обновить все строчки и добавить к каждой строчке любой символ
 
