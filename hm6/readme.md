@@ -1,0 +1,67 @@
+### Журналы
+
+1. Настройте выполнение контрольной точки раз в 30 секунд.
+
+``` text
+sudo -u postgres nano /var/lib/pgsql/15/hw6/postgresql.conf
+	
+checkpoint_timeout = 30s
+```
+![](files/1.png)
+
+ Делаем рестарт
+ 
+ ``` text
+sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw6 restart
+```
+
+2. 10 минут c помощью утилиты pgbench подавайте нагрузку.
+
+Инициализируем
+``` text
+sudo -u postgres /usr/pgsql-15/bin/pgbench -i -U postgres postgres
+```
+![](files/2_1.png)
+
+Запускаем 
+
+sudo -u postgres /usr/pgsql-15/bin/pgbench -c8 -P 60 -T 600 -U postgres postgres
+
+![](files/2_2.png)
+
+3. Измерьте, какой объем журнальных файлов был сгенерирован за это время. Оцените, какой объем приходится в среднем на одну контрольную точку.
+
+``` text
+sudo -u postgres ls -lh /var/lib/pgsql/15/hw6/pg_wal/
+```
+Было сгенерировано 6 файлов по 16mb = 96mb
+
+![](files/3.png)
+
+4. Проверьте данные статистики: все ли контрольные точки выполнялись точно по расписанию. Почему так произошло?
+
+``` text
+SELECT * FROM pg_stat_bgwriter \gx
+```
+![](files/4.png)
+
+41 точка сгенерировалась по расписанию, 1 по требованию
+
+5. Сравните tps в синхронном/асинхронном режиме утилитой pgbench. Объясните полученный результат.
+   По умолчанию синхронный режим включен
+
+   ![](files/5_1.png)
+
+Запускаем pgbench
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/pgbench -c8 -P 10 -T 60 -U postgres postgres
+```
+
+![](files/5_2.png)
+
+выключаем синхронный режим, перезапускаем сервер, запускаем pgbench
+
+![](files/5_3.png)
+
+   
