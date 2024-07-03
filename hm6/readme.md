@@ -64,4 +64,27 @@ sudo -u postgres /usr/pgsql-15/bin/pgbench -c8 -P 10 -T 60 -U postgres postgres
 
 ![](files/5_3.png)
 
+
+В асинхронном режиме из-за отсутствия журналирования уменьшилось latency и увеличилось tps.
    
+6. Создайте новый кластер с включенной контрольной суммой страниц. Создайте таблицу. Вставьте несколько значений. 
+Выключите кластер. Измените пару байт в таблице. Включите кластер и сделайте выборку из таблицы. Что и почему произошло? как проигнорировать ошибку и продолжить работу?
+
+Останавливаем сервер
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw6 stop
+```
+
+Включаем checksums
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/pg_checksums --enable -D /var/lib/pgsql/15/hw6
+```
+
+![](files/6_1.png)
+
+
+create table t1(c1 integer);
+
+insert into t1 values(1,2,3);
