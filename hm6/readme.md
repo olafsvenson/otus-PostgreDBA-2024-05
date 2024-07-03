@@ -84,7 +84,47 @@ sudo -u postgres /usr/pgsql-15/bin/pg_checksums --enable -D /var/lib/pgsql/15/hw
 
 ![](files/6_1.png)
 
+Включаем сервер.
 
+Создаем и заполняем таблицу
+
+``` text
 create table t1(c1 integer);
+insert into t1 values(1),(2),(3);
+```
 
-insert into t1 values(1,2,3);
+![](files/6_2.png)
+
+Узнаем где файл таблицы
+``` text 
+SELECT pg_relation_filepath('t1');
+```
+
+![](files/6_3.png)
+
+Остановим сервер, отредактируем файл, запустим сервер.
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw6 stop
+sudo -u postgres nano /var/lib/pgsql/15/hw6/base/5/16414
+sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw6 start
+```
+
+Попробуем получить данные из таблицы
+
+``` text
+select * from t1;
+```
+![](files/6_4.png)
+
+Получаем ошибку crc
+
+
+Чтобы игнорировать нужно установить ignore_checksum_failure = on.
+
+``` text
+set ignore_checksum_failure = on;
+select * from t1;
+```
+
+![](files/6_5.png)
