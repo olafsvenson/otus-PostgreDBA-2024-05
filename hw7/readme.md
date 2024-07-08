@@ -20,8 +20,10 @@ show log_min_duration_statement;
 
 ![](files/2.png)
 
+``` text
 create table otus_test(a1 integer);
 insert into otus_test values(1),(2),(3);
+```
 
 В первой сессии
 
