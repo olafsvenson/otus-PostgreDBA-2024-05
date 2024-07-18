@@ -27,6 +27,7 @@ sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw10_3 -o "-p 543
 sudo -u postgres /usr/pgsql-15/bin/psql -p 5432
 alter system set wal_level = logical;
 sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw10_1 -o "-p 5432" restart
+```
 
 Для сервера №2
 ``` text
