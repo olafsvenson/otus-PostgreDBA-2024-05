@@ -158,3 +158,45 @@ publication serv2_test2 with (copy_data = true);
 
 Записи с сервера №1 и №2 появились на сервере №3.
 
+
+
+Создаем бекап сервера №3 с помощью pg_basebackup с опцией -R
+
+``` text
+sudo -u postgres pg_basebackup -h localhost -p 5434 -W -D /var/lib/pgsql/15/backups -Ft -z -Xs -R --slot=replica --create-slot -P
+```
+![](files/11.png)
+
+И на осонове его создаем новый сервер №4
+
+``` text
+sudo -u postgres mkdir /var/lib/pgsql/15/hw10_4
+sudo -u postgres tar xzf /var/lib/pgsql/15/backups/base.tar.gz -C /var/lib/pgsql/15/hw10_4
+sudo -u postgres tar xzf /var/lib/pgsql/15/backups/pg_wal.tar.gz -C /var/lib/pgsql/15/hw10_4
+
+sudo -u postgres chown -R postgres:postgres /var/lib/pgsql/15/hw10_4
+sudo chmod 700 -R /var/lib/pgsql/15/hw10_4
+
+sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw10_4 -o "-p 5435" start
+```
+
+![](files/12.png)
+
+Сервер №4 в статусе in recovery
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/psql -p 5435
+SELECT pg_is_in_recovery();
+```
+![](files/13.png)
+
+Подключаемся к серверу №3, посмотрим на состояние репликации
+
+``` text
+sudo -u postgres /usr/pgsql-15/bin/psql -p 5434
+SELECT * FROM pg_stat_replication \gx
+```
+
+![](files/14.png)
+
+Статус streaming
