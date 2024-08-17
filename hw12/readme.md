@@ -1,4 +1,4 @@
-### Работа с join'ами, статистикой.
+### Р Р°Р±РѕС‚Р° СЃ join'Р°РјРё, СЃС‚Р°С‚РёСЃС‚РёРєРѕР№.
 
 ``` text
 sudo -u postgres /usr/pgsql-15/bin/pg_ctl -D /var/lib/pgsql/15/hw12 initdb
@@ -7,17 +7,50 @@ sudo -u postgres /usr/pgsql-15/bin/psql
 wget https://edu.postgrespro.ru/demo_small.zip && sudo apt install unzip && unzip demo_small.zip && sudo -u postgres psql -d postgres -f /tmp/demo_small.sql
 ```
 
-1. Реализовать прямое соединение двух или более таблиц
+1. Р РµР°Р»РёР·РѕРІР°С‚СЊ РїСЂСЏРјРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РґРІСѓС… РёР»Рё Р±РѕР»РµРµ С‚Р°Р±Р»РёС†
+
+РќРѕРјРµСЂР° Р±РёР»РµС‚РѕРІ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ СЂРµР№СЃР°
+``` text
+
+select t.ticket_no, f.flight_no
+from bookings.tickets t
+inner join bookings.ticket_flights tf on t.ticket_no = tf.ticket_no
+inner join bookings.flights f on tf.flight_id = f.flight_id
+where 
+	f.flight_no ='PG0242'
+```	
+2. Р РµР°Р»РёР·РѕРІР°С‚СЊ Р»РµРІРѕСЃС‚РѕСЂРѕРЅРЅРµРµ (РёР»Рё РїСЂР°РІРѕСЃС‚РѕСЂРѕРЅРЅРµРµ)СЃРѕРµРґРёРЅРµРЅРёРµ РґРІСѓС… РёР»Рё Р±РѕР»РµРµ С‚Р°Р±Р»РёС†
+
+Р‘СЂРѕРЅРё, РіРґРµ РЅРµС‚ РїРѕСЃР°РґРѕС‡РЅС‹С… С‚Р°Р»РѕРЅРѕРІ
 
 ``` text
-	select t.*
-	from bookings.tickets t
-	inner join bookings.bookings b on t.book_ref = t.book_ref
-	inner join bookings.ticket_flights f on t.ticket_no = f.ticket_no
-```	
-2. Реализовать левостороннее (или правостороннее)соединение двух или более таблиц
-3. Реализовать кросс соединение двух или более таблиц
-4. Реализовать полное соединение двух или более таблиц
-5. Реализовать запрос, в котором будут использованы разные типы соединений
-6. Сделать комментарии на каждый запрос
-7. К работе приложить структуру таблиц, для которых выполнялись соединения
+select
+	b.book_ref,
+	t.ticket_no,
+	boarding_no
+from
+	bookings.bookings b
+join bookings.tickets t on
+	t.book_ref = b.book_ref
+left join bookings.boarding_passes bp on
+	bp.ticket_no = t.ticket_no
+where
+	boarding_no is null
+```
+
+3. Р РµР°Р»РёР·РѕРІР°С‚СЊ РєСЂРѕСЃСЃ СЃРѕРµРґРёРЅРµРЅРёРµ РґРІСѓС… РёР»Рё Р±РѕР»РµРµ С‚Р°Р±Р»РёС†
+
+Р’СЃРµ РЅРѕРјРµСЂР° РјРµСЃС‚ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ СЃР°РјРѕР»РµС‚Р°
+
+``` text
+select a.model, s.seat_no
+from bookings.aircrafts a
+cross join bookings.seats s 
+where a.model='Boeing 777-300'
+order by s.seat_no
+```
+
+4. Р РµР°Р»РёР·РѕРІР°С‚СЊ РїРѕР»РЅРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РґРІСѓС… РёР»Рё Р±РѕР»РµРµ С‚Р°Р±Р»РёС†
+5. Р РµР°Р»РёР·РѕРІР°С‚СЊ Р·Р°РїСЂРѕСЃ, РІ РєРѕС‚РѕСЂРѕРј Р±СѓРґСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅС‹ СЂР°Р·РЅС‹Рµ С‚РёРїС‹ СЃРѕРµРґРёРЅРµРЅРёР№
+6. РЎРґРµР»Р°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РЅР° РєР°Р¶РґС‹Р№ Р·Р°РїСЂРѕСЃ
+7. Рљ СЂР°Р±РѕС‚Рµ РїСЂРёР»РѕР¶РёС‚СЊ СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏР»РёСЃСЊ СЃРѕРµРґРёРЅРµРЅРёСЏ
