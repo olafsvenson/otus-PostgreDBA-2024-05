@@ -51,6 +51,15 @@ order by s.seat_no
 ```
 
 4. Реализовать полное соединение двух или более таблиц
-5. Реализовать запрос, в котором будут использованы разные типы соединений
-6. Сделать комментарии на каждый запрос
-7. К работе приложить структуру таблиц, для которых выполнялись соединения
+
+Пассажиры бизнесс класса
+
+``` text
+select t.passenger_id, tf.fare_conditions
+from bookings.ticket_flights tf
+full join bookings.tickets t
+	on tf.ticket_no = t.ticket_no
+where tf.fare_conditions='Business'
+```
+
+
