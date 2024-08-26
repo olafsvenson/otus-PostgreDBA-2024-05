@@ -35,7 +35,7 @@ select distinct fare_conditions from ticket_flights_business;
 ![](files/2.png)
 
 ``` text
-select * from ticket_flights_comfort limit 10;
+select distinct fare_conditions from ticket_flights_comfort limit 10;
 ```
 ![](files/3.png)
 
