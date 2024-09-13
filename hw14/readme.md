@@ -105,3 +105,83 @@ select * from sales;
 select * from good_sum_mart;
 ```
 ![](files/3.png)
+
+
+### Исправление замечаний
+
+Как оказалось, чтобы работали объекты new в триггере нужно заменить FOR EACH STATEMENT на FOR EACH ROW
+
+``` sql
+CREATE OR REPLACE TRIGGER tr_report
+AFTER INSERT OR UPDATE OR DELETE
+ON sales
+FOR EACH ROW
+EXECUTE FUNCTION report_func();
+```
+Переписал ф-ию триггера. 
+1) Теперь таблица good_sum_mart не пересчитывается полностью при срабатывании триггера.
+2) Сохраняем предыдущие продажи по старым ценам (сами старые цены не храним)
+
+``` sql
+CREATE OR REPLACE FUNCTION report_func()
+RETURNS trigger
+AS
+$$
+BEGIN
+
+with q as
+(
+ select g.good_name, g.good_price
+ from goods g
+ inner join sales s on s.good_id = g.goods_id
+ where 	s.sales_id = new.sales_id
+)
+merge into good_sum_mart mart
+using q on mart.good_name = q.good_name
+when not matched then	   
+	insert (good_name, sum_sale) values (q.good_name, q.good_price * new.sales_qty)
+when matched then
+-- сохраняем предыдущие продажи по старым ценам, добавляя к ним продажи по текущей цене
+	update set sum_sale = mart.sum_sale + q.good_price * new.sales_qty;
+	
+	RETURN NULL;
+END;
+$$
+  LANGUAGE plpgsql
+  
+```
+
+Проверка
+
+Добавляем 1-ю продажу
+
+``` sql
+INSERT INTO sales (good_id, sales_qty) VALUES (1, 10);
+```
+![](files/4.png)
+
+Проверяем таблицу-витрину
+
+![](files/5.png)
+
+Добавляем 2-ю продажу
+
+``` sql
+INSERT INTO sales (good_id, sales_qty) VALUES (1, 1);
+```
+![](files/6.png)
+
+Проверяем таблицу-витрину
+
+![](files/7.png)
+
+Добавляем 3-ю продажу
+
+``` sql
+INSERT INTO sales (good_id, sales_qty) VALUES (1, 2);
+```
+![](files/8.png)
+
+Проверяем таблицу-витрину
+
+![](files/9.png)
