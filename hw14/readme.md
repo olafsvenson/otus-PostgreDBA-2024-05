@@ -164,24 +164,51 @@ INSERT INTO sales (good_id, sales_qty) VALUES (1, 10);
 
 ![](files/5.png)
 
+Меняем цену
+
+``` sql
+update goods
+set good_price = 0.55
+where goods_id=1;
+
+select * from goods;
+```
+![](files/6.png)
+
 Добавляем 2-ю продажу
 
 ``` sql
 INSERT INTO sales (good_id, sales_qty) VALUES (1, 1);
 ```
-![](files/6.png)
 
 Проверяем таблицу-витрину
 
+``` sql
+select * from good_sum_mart;
+```
 ![](files/7.png)
 
-Добавляем 3-ю продажу
+Меняем цену еще раз
 
 ``` sql
-INSERT INTO sales (good_id, sales_qty) VALUES (1, 2);
+update goods
+set good_price = 1
+where goods_id=1;
+
+select * from goods;
 ```
 ![](files/8.png)
 
+Добавляем 3 продажу
+
+``` sql
+INSERT INTO sales (good_id, sales_qty) VALUES (1, 1);
+```
+
 Проверяем таблицу-витрину
 
+``` sql
+select * from good_sum_mart;
+```
 ![](files/9.png)
+
