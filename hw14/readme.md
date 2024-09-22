@@ -173,7 +173,7 @@ where goods_id=1;
 
 select * from goods;
 ```
-![](files/6.png)
+![](files/6_1.png)
 
 Добавляем 2-ю продажу
 
